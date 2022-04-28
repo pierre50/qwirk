@@ -1,0 +1,131 @@
+<div class="MessagePanel">
+    <div class="message-header">
+        <h5>My profile</h5>
+    </div>
+    <div class="message-body">
+        <div id="alert"></div>
+        <%if (user.picture!="") { %>
+            <img id="picture" src="/<%= encrypt(user.username) %>/img/<%= user.picture %>" class="img-circle">
+        <%} else { %>
+            <img id="picture" src="/img/profile.png" class="img-circle">
+        <% } %>
+
+        <form id="form" action="/profile" method="post" enctype="multipart/form-data">
+            <span class="btn btn-primary btn-file">
+                Choose image <input id="file" type="file" name="file" accept="image/png,image/jpeg" >
+            </span>
+            <div class="row form-group">
+                <div class="col-6">
+                    <input type="text" class="form-control" value="<%= user.firstname %>" name="firstname" required>
+                </div>
+                <div class="col-6">
+                    <input type="text" class="form-control" value="<%= user.lastname %>" name="lastname" required>
+                </div>
+            </div>
+            <div class="row form-group">
+                <div class="col-12">
+                    <textarea class="form-control" name="bio"><%= user.bio %></textarea>
+                </div>
+            </div>
+
+            <div class="row form-group">
+                <div class="col-6">
+                    <input id="oldpassword" type="password" class="form-control" name="oldpassword" placeholder="Old password" disabled>
+                </div>
+                <button class="btn" id="reset">Edit</button>
+            </div>
+            <div id="rstpass">
+                <div class="row form-group">
+                    <div class="col-6">
+                        <input id="newpassword" type="password" class="form-control" name="newpassword" placeholder="New password">
+                    </div>
+                </div>
+                <div class="row form-group">
+                    <div class="col-6">
+                        <input id="confpassword" type="password" class="form-control" name="confpassword" placeholder="Confirm password">
+                    </div>
+                </div>
+            </div>
+
+            <input type="submit" class="btn btn-primary" value="Save" >
+        </form>
+    </div>
+</div>
+
+<script>
+var $picture=$('#picture');
+
+var $file=$('#file');
+var $firstname=$('#firstname');
+var $lastname=$('#lastname');
+var $bio=$('#bio');
+
+var $form=$('#form');
+
+var $alert=$('#alert');
+
+// Upload profile image
+$file.on('change',function(e){
+    e.preventDefault();
+    // Variable used to detect extension of file
+    var re = /(?:\.([^.]+))?$/;
+    // We take the file
+    var file = $(this)[0].files;
+    // Verify a file is selected
+    if (file.length > 0){
+        // Get the extension of the file
+        var ext = re.exec(file[0].name)[1];
+        // Some condition for the file .png .jpg and size
+        if (((ext=="png")||(ext=="jpg"))&&(file[0].size > 0)) {
+            var reader = new FileReader();
+            reader.readAsDataURL(file[0]);
+            reader.onload = function () {
+                console.log($picture);
+                $picture[0].outerHTML='<img id="picture" src='+$(this)[0].result+' class="img-circle">';
+            };
+            reader.onerror = function (error) {
+                console.log('Error: ', error);
+            };
+        }else{
+            // Delete the uploaded file
+            $(this)[0].value = '';
+            if($(this)[0].value){
+                $(this)[0].type = "text";
+                $(this)[0].type = "file";
+            }
+            // Display alert
+            $alert.html('<div class="alert alert-danger"><strong>Error!</strong> Wrong image.</div>');
+        }
+    }
+});
+
+$reset=$('#reset');
+
+$reset.click(function(e) {
+    e.preventDefault();
+
+    if ($reset[0].innerText=="Edit"){
+        document.getElementById('rstpass').style.display = 'block';
+        document.getElementById('rstpass').style.visibility = 'visible';
+        document.getElementById('oldpassword').disabled = false;
+        document.getElementById('oldpassword').required = true;
+        document.getElementById('newpassword').required = true;
+        document.getElementById('confpassword').required = true;
+        $reset[0].innerText="Cancel";
+    }else{
+        document.getElementById('rstpass').style.display = 'none';
+        document.getElementById('rstpass').style.visibility = 'hidden';
+        document.getElementById('oldpassword').disabled = true;
+        document.getElementById('oldpassword').value = "";
+        document.getElementById('newpassword').value = "";
+        document.getElementById('confpassword').value = "";
+        document.getElementById('oldpassword').required = false;
+        document.getElementById('newpassword').required = false;
+        document.getElementById('confpassword').required = false;
+        $reset[0].innerText="Edit";
+
+    }
+});
+
+
+</script>

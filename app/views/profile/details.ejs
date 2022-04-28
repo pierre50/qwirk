@@ -1,0 +1,79 @@
+<div class="MessagePanel">
+    <div class="message-header">
+        <%if (contact.accepted != null) {%>
+            <%if (contact.from_fk == user.id) {%>
+                <%if ((contact.pseudo_from == "")||(contact.username == contact.pseudo_from)){%>
+                    <h5><%= contact.username %></h5>
+                <% }else { %>
+                    <h5><%= contact.username %> (<%= contact.pseudo_from %>)</h5>
+                <% } %>
+            <% }else if(contact.from_fk == user.id) { %>
+                <%if ((contact.pseudo_to == "")||(contact.username == contact.pseudo_to)){%>
+                    <h5><%= contact.username %></h5>
+                <% }else{ %>
+                    <h5><%= contact.username %> (<%= contact.pseudo_to %>)</h5>
+                <% } %>
+            <% } else{%>
+                <h5><%= contact.username %></h5>
+            <% } %>
+        <% } else { %>
+            <h5><%= contact.username %></h5>
+        <% } %>
+    </div>
+    <div class="message-body">
+        <%if (contact.picture!="") { %>
+            <img src="/<%= encrypt(contact.username) %>/img/<%= contact.picture %>" class="img-circle">
+        <%} else { %>
+            <img src="/img/profile.png" class="img-circle">
+        <% } %>
+
+        <div class="row form-group">
+            <div class="col-6">
+                <input class="form-control" value="<%= contact.firstname %>" id="profileFirstname" readonly>
+            </div>
+            <div class="col-6">
+                <input class="form-control" value="<%= contact.lastname %>" id="profileLastname" readonly>
+            </div>
+        </div>
+        <div class="row form-group">
+            <div class="col-12">
+                <input class="form-control" value="<%= contact.bio %>" id="profileLastname" readonly>
+            </div>
+        </div>
+        <%if (contact.id!=user.id){%>
+            <%if (contact.accepted == null) {%>
+                <a id="add" name="add" ><button class="btn btn-success">Add contact</button></a>
+            <% } else if (contact.accepted == 1) { %>
+                <a id="delete" name="delete" ><button class="btn btn-danger">Delete contact</button></a>
+                <a id="block" name="block" ><button class="btn btn-danger">Block contact</button></a>
+            <% } else { %>
+                <div class="alert alert-info">
+                    <strong>Info!</strong> Contact request already send.
+                </div>
+            <% } %>
+        <% } %>
+    </div>
+</div>
+
+<script>
+
+var contact = <%-JSON.stringify( contact )%>
+var user = <%-JSON.stringify( user )%>
+
+$('#delete').click(function() {
+    deleteContact(user, contact);
+    window.location.replace(window.location.protocol+"//"+window.location.host);
+});
+
+$('#block').click(function() {
+    blockContact(user, contact);
+    window.location.replace(window.location.protocol+"//"+window.location.host);
+
+});
+
+$('#add').click(function() {
+    SendRequest(user, contact);
+    window.location.replace(window.location.protocol+"//"+window.location.host);
+});
+
+</script>

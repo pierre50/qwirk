@@ -1,0 +1,43 @@
+<div class="MessagePanel">
+    <div class="message-header">
+    	<h5>Parameters</h5>
+   	</div>
+	<div class="message-body">
+		<form action="/parameters" id="parametersForm" method="post">
+	 		<input type="hidden" id="themeInput" name="theme" value="<%=user.theme%>">
+		</form>
+
+		<label>Choose your theme</label>
+		<ul id="colorUl">
+		<div class="">
+		<li class="box pink" id="pink">
+		  <span>Pink</span>
+		</li><!--
+		--><li class="box yellow" id="yellow">
+		  <span>Yellow</span>
+		</li><!--
+		--><li class="box green" id="green">
+		  <span>Green</span>
+		</li><!--
+		--><li class="box blue" id="blue">
+		  <span>Blue</span>
+		</li><!--
+		--><li class="box purple" id="purple">
+		  <span>Purple</span>
+		</li>
+		</div>
+		</ul>
+
+		<label>Delete your account</label>
+	    <a href="/delete"><button class="btn btn-danger">Delete</button></a>
+    </div>
+</div>
+
+<script>
+    $('#colorUl li').click(function() 
+    { 
+     	//document.getElementById('contactNav').className="col-md-3 nopadding "+this.id;
+     	document.getElementById('themeInput').value=this.id
+     	document.getElementById("parametersForm").submit();
+    });
+</script>

@@ -1,0 +1,127 @@
+<nav class="navbar navbar-inverse navbar-toggleable-md navbar-light">
+	<button class="navbar-toggler navbar-toggler-right" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+		<span class="navbar-toggler-icon"></span>
+	</button>
+
+  	<div class="collapse navbar-collapse" id="navbarSupportedContent">
+    	<ul class="navbar-nav mr-auto">
+			<li class="nav-item">
+		   		<%if (user.picture!="") { %>
+	    			<img src="/<%= encrypt(user.username) %>/img/<%= user.picture %>" class="img-circle-header">
+	    		<%} else { %>
+	    			<img src="/img/profile.png" class="img-circle-small">
+	    		<% } %>
+			</li>
+
+		<li class="nav-item">
+			<a href="/"><h5 class="header-title"> <%= user.username %></h5></a>
+			<div id="dropdownStatus" class="dropdown">
+				<a class="nav-link dropdown-toggle nopadding" id="navbarDropdownStatus" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+			    		<%switch (user.status) {
+				            case "Online":%>
+				                <label id="navStatus"><img src="/img/online.png" alt="" /> <%= user.status %></label>
+				            <%break;
+				            case "Offline":%>
+				                <label id="navStatus"><img src="/img/offline.png" alt="" /> <%= user.status %></label>
+				            <%break;
+				            case "Busy":%>
+				                <label id="navStatus"><img src="/img/busy.png" alt="" /> <%= user.status %></label>
+				            <%break;
+				            case "Away":%>
+				                <label id="navStatus"><img src="/img/away.png" alt="" /> <%= user.status %></label>
+				            <%break;
+				            default: %>
+				                <label id="navStatus"><img src="/img/custom.png" alt="" /> <%= user.status %></label>
+				        <% } %>
+				</a>
+				<ul id="statusList" class="dropdown-menu" aria-labelledby="dropdownStatusButton">
+					<li data-value="Online"><a class="dropdown-item"><img src="/img/online.png"/> Online</a></li>
+					<li data-value="Busy"><a class="dropdown-item"><img src="/img/busy.png"/> Busy</a></li>
+					<li data-value="Away"><a class="dropdown-item"><img src="/img/away.png"/> Away</a></li>
+					<li data-value="Offline"><a class="dropdown-item"><img src="/img/offline.png"/> Offline</a></li>
+					<div class="dropdown-divider"></div>
+					<li id="custom" class="dropdown-item" style="background:none"><img src="/img/custom.png"/> <input id="customTxt" type="text" name="custom" maxlength="20" value="<%= user.customStatus %>" onClick="this.select();" style="cursor:pointer;background:none;border:none;width:90%;"></li>
+				</ul>
+			</div>
+		</li>
+
+
+    	</ul>
+    	<ul class="navbar-nav my-2 my-lg-0">
+			<li class="nav-item dropdown">
+      			<a class="nav-link dropdown-toggle arrow-down" href="#" data-toggle="dropdown">
+      			</a>
+			    <ul class="dropdown-menu">
+			      	<li><a class="dropdown-item" href="/profile">Profile</a></li>
+			      	<li><a class="dropdown-item" href="/blocked">Blocked</a></li>
+			      	<li><a class="dropdown-item" href="/parameters">Parameters</a></li>
+			      	<div class="dropdown-divider"></div>
+					<li><a class="dropdown-item" href="/logout">Logout</a></li>
+			    </ul>
+      		</li>
+
+
+    	</ul>
+  	</div>
+
+
+
+</nav>
+
+<script>
+
+var $navStatus=$('#navStatus');
+var $saveStatus=$('#saveStatus');
+var $use=$('#use');
+
+var $custom=$('#custom');
+var customTxt = document.getElementById('customTxt');
+
+$('#custom').on("keyup", function(e) {
+    if (e.keyCode == 13) {
+    	fromId = <%= user.id %>;
+
+    	var status = "";
+    	if(customTxt.value === "") {
+    		status = "Empty";
+    		customTxt.value = "Empty"
+    	}
+    	else
+    		status = customTxt.value;
+	    
+	    // Change the new status on nav bar
+		$navStatus[0].innerHTML = '<img src="/img/custom.png"/> ' + status;
+
+		// Save custom status
+	    SaveStatus(status, fromId);
+	    
+		// Send request to server
+	    ChangeStatus(status);
+
+	    // Unfocus input
+    	customTxt.blur();
+
+    	// Close DropDown
+    	$(".myFakeClass").dropdown('toggle');
+    }
+});
+
+$(document).on('click', '.dropdown', function (e) {
+  e.stopPropagation();
+});
+
+// Change status
+$('#statusList li').on('click', function(){
+    // Get the value of the status
+	var dataValue=$(this).attr('data-value');
+	if (dataValue!=null){
+        // Change the new status on nav bar
+		$navStatus[0].innerHTML = '<img src="/img/'+dataValue.toLowerCase()+'.png"/> ' + dataValue;
+        // Send request to server
+        ChangeStatus(dataValue);
+        // Close DropDown
+    	$(".myFakeClass").dropdown('toggle');
+	}
+});
+
+</script>

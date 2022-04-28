@@ -1,0 +1,37 @@
+<div class="MessagePanel">
+    <div class="message-header">
+        <h5>Contact Blocked</h5>
+    </div>
+    <div class="message-body">
+        <%if (blocked.length==0) {%>
+            <div class="alert alert-info">
+              <strong>Info!</strong> You blocked nobody.
+            </div>
+        <%}%>
+        <ul class="list-group" id="blockedList">
+            <% blocked.forEach(function(blockedcontact){ %>
+
+                <li id="g<%= blockedcontact.id %>" class="list-group-item">
+                    <label class="title-black"><%= blockedcontact.username %></label>
+                    <button id="unblock" type="button" class="btn btn-light btn-sm" >Unblock</button>
+                </li>
+
+            <% }); %>
+        </ul>
+    </div>
+</div>
+
+<script>
+
+var $blockedList=$('#blockedList');
+
+$blockedList.on('click','button#unblock',function (){
+    toId = $(this)["0"].parentElement.id.slice(1);
+
+    Unblock(user.id, toId);
+
+    // Ok je t'avoue c'est très sale
+    window.location.replace(window.location.protocol+"//"+window.location.host);
+});
+
+</script>

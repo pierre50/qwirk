@@ -1,0 +1,37 @@
+<div class="page">
+	<div id="alert">
+		<%if (alert) { %>
+			<div class="alert alert-<%= alert.style %>"><strong><%= alert.title %></strong> <%= alert.content %></div>
+		<% } %>
+	</div>
+
+	<div id="pagecard" class="card col-5 container">
+		<div class="card-header">
+			<h2 style="text-align:center;">Lost Password ?</h2>
+		</div>
+
+		<div class="card-blockd">
+	    	<p>
+	    	Follow these simple steps to reset your account:<br>
+	    	<br>
+			1.  Enter your Qwirk username or email address<br>
+			2.  Wait for your new password to be sent<br>
+			3.  Follow inscrutions and be re-united with your Qwirk account<br>
+			<br>
+			Want more help? We have a full guide to resetting your password.
+			</p>
+		</div>
+		<form id="forgotForm" method="post" action="/restore" >
+		    <div class="form-group">
+	            <input class="form-control" name="sendemail" id="sendemail" placeholder="Email or username" required>
+		    </div>
+
+		    <div class="form-group">
+	        	<input type="submit" class="btn btn-primary" value="Get new password">
+		    </div>
+		</form>
+	    <div class="form-group">
+	    	<a href="/login"><button class="btn">Register</button></a>
+	    </div>
+	</div>
+</div>

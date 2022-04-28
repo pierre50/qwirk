@@ -1,0 +1,591 @@
+<div class="ContactPanel">
+	<div class="contactHeader">
+		<input class="search" id="searchInput" onkeyup="searchContact('searchInput','contactsLu','groupsLu','channelsLu','requestsLu')" type="text" placeholder="Search"/>
+		<div class="dropdown" style="display:inline-block;">
+		  <button class="menu" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+		  <img src="/img/menu.png"/>
+		  </button>
+		  <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+		    <a id="newchannelbtn" data-toggle="modal" title="Add this item" class="dropdown-item" href="#ModalNewChannel" data-target="#ModalNewChannel">Create a channel</a>
+		    <a id="newgroupbtn" data-toggle="modal" title="Add this item" class="dropdown-item" href="#ModalNewGroup" data-target="#ModalNewGroup">Create a group</a>
+		    <a class="dropdown-item" href="#"></a>
+		  </div>
+		</div>
+	</div>
+
+	<h5  id="requestsTitle"> Requests </h5>
+	<div id="requestsPanel" class="contactlogs">
+		<ul class="list-group" id="requestsLu">
+		  	<% requests.forEach(function(contact){ %>
+			   <li class="list-group-item" id="r<%= contact.contactId %>">
+			   		<a href="/profile/<%= contact.username %>">
+				   		<%if (contact.picture!="") { %>
+			    			<img src="/<%= encrypt(contact.username) %>/img/<%= contact.picture %>" class="img-circle-small">
+			    		<%} else { %>
+			    			<img src="/img/profile.png" class="img-circle-small">
+			    		<% } %>
+
+						<label class="title"><%= contact.username %></label>
+					</a>
+					<button id="accept" type="button" class="btn btn-success btn-sm btn-space" >V</button>
+					<button id="refuse" type="button" class="btn btn-danger btn-sm" >X</button>
+			   	</li>
+	  		<% }); %>
+		</ul>
+	</div>
+
+	<h5 id="groupsTitle"> Channels </h5>
+	<div id="groupsPanel" class="contactlogs">
+		<ul class="list-group" id="channelsLu">
+		  	<% channels.forEach(function(channel){ %>
+			   <li class="list-group-item" id="c<%= channel.id %>">
+			   		<%if (channel.userIn) {%>
+				   	<a href="/messages/<%= channel.id %>">
+				   	<% }else{ %>
+				   	<a id="newUserChannel">
+				   		<% } %>
+				   		<%if (channel.userIn) {%>
+					   		<span class="title title-group"><%= channel.name %></span>
+					   	<% }else{ %>
+					   		<span class="title-grey title-group"><%= channel.name %></span>
+					   	<% } %>
+						<%if (channel.notif > 0){ %>
+							<span class="message-notif"><%= channel.notif %></span>
+						<% } %>
+				   	</a>
+			   	</li>
+
+		  	<% }); %>
+		</ul>	
+	</div>
+
+	<h5 id="groupsTitle"> Groups </h5>
+	<div id="groupsPanel" class="contactlogs">
+		<ul class="list-group" id="groupsLu">
+		  	<% groups.forEach(function(group){ %>
+			   <li class="list-group-item" id="g<%= group.id %>">
+				   	<a href="/messages/<%= group.id %>">
+					   	<span class="title title-group"><%= group.name %></span>
+						<%if (group.notif > 0){ %>
+							<span class="message-notif"><%= group.notif %></span>
+						<% } %>
+				   	</a>
+			   	</li>
+
+		  	<% }); %>
+		</ul>	
+	</div>
+
+
+	<h5 id="friendsTitle"> Friends </h5>
+	<div id="friendsPanel" class="contactlogs">
+		<ul class="list-group" id="contactsLu">
+		  	<% contacts.forEach(function(contact){ %>
+			   <li class="list-group-item" id="<%= contact.id %>">
+				    <%switch (contact.status) {
+						case "Online":%>
+							<img src="/img/online.png" alt="" /> 
+						<%break;
+		   				case "Offline":%>
+		   					<img src="/img/offline.png" alt="" />
+		   				<%break;
+		   				case "Busy":%>
+		   					<img src="/img/busy.png" alt="" />
+		   				<%break;
+		   				case "Away":%>
+		   					<img src="/img/away.png" alt="" /> 
+		   				<%break;
+		   				default: %>
+			    			<img src="/img/custom.png" alt="" /> 
+			    	<% } %>
+
+				   	<a href="/messages/<%= contact.username %>">
+				   		<%if (contact.picture!="") { %>
+			    			<img src="/<%= encrypt(contact.username) %>/img/<%= contact.picture %>" class="img-circle-small">
+			    		<%} else { %>
+			    			<img src="/img/profile.png" class="img-circle-small">
+			    		<% } %>
+					   	<%if (contact.from_fk == user.id) {%>
+							<%if (contact.pseudo_from == "") {%>
+								<span class="title"><%= contact.username %></span>
+							<% }else{ %>
+								<span class="title"><%= contact.pseudo_from %></span>
+							<% } %>
+							<%if (contact.notif_from > 0){ %>
+								<span class="message-notif"><%= contact.notif_from %></span>
+							<% } %>
+						<% }else{ %>
+							<%if (contact.pseudo_to == "") {%>
+								<span class="title"><%= contact.username %></span>
+							<% }else{ %>
+								<span class="title"><%= contact.pseudo_to %></span>
+							<% } %>
+							<%if (contact.notif_to > 0){ %>
+								<span class="message-notif"><%= contact.notif_to %></span>
+							<% } %>
+						<% } %>
+				   	</a>
+			   	</li>
+
+		  	<% }); %>
+		</ul>	
+	</div>
+</div>
+
+
+<div id="ModalNewGroup" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="ModalNewGroupTitle">Create a new group</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+
+            <div class="modal-body">
+                <div id="alertNewGroup"></div>
+                <div class="form-group">
+				<input id="nameNewGroup" class="form-control" type="text" maxlength="80" placeholder="Group name" />
+				</div>
+				<input id="searchNewGroup" class="form-control" onkeyup="searchContact
+				('searchNewGroup','contactsLuNewGroup')" type="text" placeholder="Search contact" />
+				<div id="contactsModalPanel" class="contactlogs">
+				<ul class="list-group" id="contactsLuNewGroup">
+				  	<% contacts.forEach(function(contact){ %>
+					   <li class="list-group-item" id="cng<%= contact.id %>">
+					  		<a>
+					   		<%if (contact.picture!="") { %>
+				    			<img src="/<%= encrypt(contact.username) %>/img/<%= contact.picture %>" class="img-circle-small">
+				    		<%} else { %>
+				    			<img src="/img/profile.png" class="img-circle-small">
+				    		<% } %>
+						   		<span class="title"><%= contact.username %></span>
+						   	</a>
+					   	</li>
+
+				  	<% }); %>
+				</ul>	
+				</div>
+            </div>
+
+            <div class="modal-footer">
+                <button id="cancelNewGroup" type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+                <button id="saveNewGroup" type="button" class="btn btn-primary">Save</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div id="ModalNewChannel" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="ModalNewChannelTitle">Create a new channel</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+
+            <div class="modal-body">
+                <div id="alertNewChannel"></div>
+                <div class="form-group">
+				<input id="nameNewChannel" class="form-control" type="text" maxlength="80" placeholder="Channel name" />
+				</div>
+            </div>
+
+            <div class="modal-footer">
+                <button id="cancelNewChannel" type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+                <button id="saveNewChannel" type="button" class="btn btn-primary">Save</button>
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+
+
+// Functions to toggle, requests, groups and friends
+$('#requestsTitle').on('click', function () {
+    $('#requestsPanel').toggle();
+});
+$('#groupsTitle').on('click', function () {
+    $('#groupsPanel').toggle();
+});
+$('#friendsTitle').on('click', function () {
+    $('#friendsPanel').toggle();
+});
+
+
+// Search a specific contact
+function searchContact(inp,lu1,lu2,lu3,lu4) {
+    // Declare variables
+    var input, filter, ul, li, a, i;
+    input = document.getElementById(inp);
+
+    filter = input.value.toUpperCase();
+    ul = document.getElementById(lu1);
+    li = ul.getElementsByTagName('li');
+    // Loop through all list items, and hide those who don't match the search query
+    for (i = 0; i < li.length; i++) {
+        a = li[i].getElementsByTagName("a")[0];
+        if (a.innerHTML.toUpperCase().indexOf(filter) > -1) {
+            li[i].style.display = "";
+        } else {
+            li[i].style.display = "none";
+        }
+    }
+    if (lu2){
+	   	ul = document.getElementById(lu2);
+	    li = ul.getElementsByTagName('li');
+	    // Loop through all list items, and hide those who don't match the search query
+	    for (i = 0; i < li.length; i++) {
+	        a = li[i].getElementsByTagName("a")[0];
+	        if (a.innerHTML.toUpperCase().indexOf(filter) > -1) {
+	            li[i].style.display = "";
+	        } else {
+	            li[i].style.display = "none";
+	        }
+	    }
+    }
+    if (lu3){
+	   	ul = document.getElementById(lu3);
+	    li = ul.getElementsByTagName('li');
+
+	    // Loop through all list items, and hide those who don't match the search query
+	    for (i = 0; i < li.length; i++) {
+	        a = li[i].getElementsByTagName("a")[0];
+	        if (a.innerHTML.toUpperCase().indexOf(filter) > -1) {
+	            li[i].style.display = "";
+	        } else {
+	            li[i].style.display = "none";
+	        }
+	    }
+	}
+    if (lu4){
+	   	ul = document.getElementById(lu4);
+	    li = ul.getElementsByTagName('li');
+
+	    // Loop through all list items, and hide those who don't match the search query
+	    for (i = 0; i < li.length; i++) {
+	        a = li[i].getElementsByTagName("a")[0];
+	        if (a.innerHTML.toUpperCase().indexOf(filter) > -1) {
+	            li[i].style.display = "";
+	        } else {
+	            li[i].style.display = "none";
+	        }
+	    }
+	}
+}
+
+// When a contact status changed
+function StatusChanged(data){
+	var contact = document.getElementById(data.userid);
+	if (contact!=null){
+		var status="offline.png";
+		switch(data.newstatus) {
+		    case "Online":
+		        status="online.png";
+		        break;
+		    case "Offline":
+		        status="offline.png";
+		        break;
+		    case "Busy":
+		        status="busy.png";
+		        break;
+		    case "Away":
+		        status="away.png";
+		        break;
+		    default:
+		        status="custom.png";
+		}
+		$(contact)[0].children[0].outerHTML='<img src="/img/'+status+'" alt="" />';
+	}
+}
+
+function AddContactNotif(userId){
+	var userLi= document.getElementById(userId);
+	if (userLi){
+		var notif = userLi.getElementsByClassName("message-notif")[0];
+		if (notif){
+			notif.innerText=Number(notif.innerText)+1;
+		}else{
+			var a = userLi.getElementsByTagName("a")[0];
+			if (a){
+				var span = document.createElement("span");
+				span.className="message-notif";
+				span.innerText="1"
+				a.append(span);
+			}
+		}
+	}
+}
+
+
+function addRequest(data) {
+
+	var elem = document.getElementById("requestsLu");
+	var li = document.createElement("li");
+	li.className="list-group-item";
+	li.id = "r"+data.user.contactId;
+
+	var a = document.createElement("a");
+	a.href="/profile/"+data.user.username;
+
+	var img = '<img src="/img/profile.png" class="img-circle-small">';
+	if (data.user.picture!=""){
+		img = '<img src="/'+ data.cryptedUsername +'/img/'+data.user.picture+'" class="img-circle-small">';
+	}
+
+
+
+	var btn1 = document.createElement("button");
+	btn1.id="accept";
+	btn1.type="button";
+	btn1.className="btn btn-success btn-sm btn-space";
+	btn1.innerHTML="V";
+
+	var btn2 = document.createElement("button");
+	btn2.id="refuse";
+	btn2.type="button";
+	btn2.className="btn btn-danger btn-sm";
+	btn2.innerHTML="X";
+
+	a.innerHTML=img+'<label class="title">'+data.user.username+'</label>';
+
+	li.appendChild(a);
+	li.appendChild(btn1);
+	li.appendChild(btn2);
+
+	elem.appendChild(li);
+}
+
+function invitationPending() {
+	// Display an alert
+	console.log("en attente");
+}
+
+// Add group to the list
+function addGroup(group){
+	var elem = document.getElementById("groupsLu");
+	var li = document.createElement("li");
+	li.className="list-group-item";
+	li.id="g"+group.id;
+
+	var a = document.createElement("a");
+	a.href="/messages/"+group.id;
+
+	a.innerHTML='<span class="title title-group">'+group.name+'</span>';
+
+	li.appendChild(a);
+	elem.appendChild(li);
+}
+// Add channel to the list
+function addChannel(group){
+	var elem = document.getElementById("channelsLu");
+	var li = document.createElement("li");
+	li.className="list-group-item";
+	li.id="g"+group.id;
+
+	var a = document.createElement("a");
+	a.href="/messages/"+group.id;
+
+	a.innerHTML='<span class="title-grey title-group">'+group.name+'</span>';
+
+	li.appendChild(a);
+	elem.appendChild(li);
+}
+// Delete group to the list
+function removeGroup(group){
+	var elem = document.getElementById("g"+group.groupId);
+	if (elem){
+		elem.parentNode.removeChild(elem);
+	}else{
+		var elem = document.getElementById("c"+group.groupId);
+		elem.parentNode.removeChild(elem);
+	}
+}
+// Exit channel
+function exitChannel(group){
+	var elem = document.getElementById("c"+group.groupId);
+	if (elem) elem.getElementsByTagName("span")[0].className="title-grey title-group";
+}
+
+// Add a contact to the list
+function addContact(contact,cryptedContact){
+	var elem = document.getElementById("contactsLu");
+	var li = document.createElement("li");
+	li.className="list-group-item";
+	li.id=contact.id;
+
+	var a = document.createElement("a");
+	a.href="/messages/"+contact.username;
+
+	var status = document.createElement("img")
+	switch(contact.status) {
+	    case "Online":
+	        status.src='/img/online.png';
+	        break;
+	    case "Offline":
+	        status.src='/img/offline.png';
+	        break;
+	    case "Away":
+	        status.src='/img/away.png';
+	        break;
+	    case "Busy":
+	        status.src='/img/busy.png';
+	        break;	        	        
+	    default:
+	        status.src='/img/custom.png';
+	}
+	
+	var img = '<img src="/img/profile.png" class="img-circle-small">';
+	if (contact.picture!=""){
+		img = '<img src="/'+ cryptedContact +'/img/'+contact.picture+'" class="img-circle-small">';
+	}
+	a.innerHTML=img+'<span class="title">'+contact.username+'</span>';
+
+	li.appendChild(status);
+	li.appendChild(a);
+
+	elem.appendChild(li);
+}
+
+
+/*
+/
+/ Search User On Enter
+/
+*/
+$('#searchInput').on("keyup", function(e) {
+    if (e.keyCode == 13) {
+    	var username = document.getElementById('searchInput').value;
+		VerificationUserExists(username, username);
+    }
+});
+
+function userExist() {
+	var username = document.getElementById('searchInput').value;
+	window.location.replace(window.location.protocol+"//"+window.location.host+"/profile/"+username);
+}
+
+/*
+/	New Group Modal
+/
+*/
+
+// Clear data when opening
+$('#newgroupbtn').click(function(){
+	
+    ul = document.getElementById('contactsLuNewGroup');
+    li = ul.getElementsByTagName('li');
+
+    for (i = 0; i < li.length; i++) {
+    	li[i].style.display="";
+    	li[i].className="list-group-item"
+    }
+
+    document.getElementById('searchNewGroup').value = "";
+    document.getElementById('nameNewGroup').value = "";
+})
+
+// Selection of contact
+$('#contactsLuNewGroup').on('click','li',function() {    
+    var id = this.id.substring(3);
+   	if (this.className=="list-group-item selected"){
+    	this.className="list-group-item";
+	}else{
+	    this.className="list-group-item selected";
+	}
+});
+
+// Send new group
+$('#saveNewGroup').one("click", function(e){
+	e.preventDefault()
+    ul = document.getElementById('contactsLuNewGroup');
+    li = ul.getElementsByTagName('li');
+
+    var groupname=document.getElementById("nameNewGroup").value;
+    if (groupname!=""){
+	    var ids=[];
+
+	    for (i = 0; i < li.length; i++) {
+	    	if(li[i].className=="list-group-item selected"){
+	    		ids.push(li[i].id.substring(3));
+	    	}
+	    }
+
+	    if (ids.length>0){
+			NewGroup(user.id, groupname, ids);
+	    }else{
+			document.getElementById('alertNewGroup').innerHTML='<div class="alert alert-danger">You must at least select one friend.</div>';
+	    }
+	}else{
+		document.getElementById('alertNewGroup').innerHTML='<div class="alert alert-danger">You must give a name for your group.</div>';
+	}
+});
+
+
+/*
+/	New Channel Modal
+/
+*/
+// Clear data when opening
+$('#newchannelbtn').click(function(){
+    document.getElementById('nameNewChannel').value = "";
+})
+$('#saveNewChannel').one("click", function(e){
+	e.preventDefault();
+    var channelname=document.getElementById("nameNewChannel").value;
+    if (channelname!=""){
+		NewChannel(user.id, channelname);
+	}else{
+		document.getElementById('alertNewChannel').innerHTML='<div class="alert alert-danger">You must give a name for your channel.</div>';
+	}
+});
+
+function errorChannelName(){
+	document.getElementById('alertNewChannel').innerHTML='<div class="alert alert-danger">This channel name already exists.</div>';
+}
+function errorChannelUser(){
+	document.getElementById('alertNewChannel').innerHTML='<div class="alert alert-danger">You cant have more than 1 channel.</div>';
+}
+$('#newUserChannel').click(function(){
+	var groupId = $(this)[0].parentElement.id.slice(1);
+	addUserChannel(groupId, user);
+});
+
+/*
+/	Accept or refuse Request
+/
+*/
+
+var $requestsLu=$('#requestsLu');
+
+// Button accept request
+$requestsLu.on('click','button#accept',function (){
+	var requestId = $(this)["0"].parentElement.id.slice(1);
+	AcceptRequest(requestId);
+}); 
+
+// Button refuse request
+$requestsLu.on('click','button#refuse',function (){
+	var requestId = $(this)["0"].parentElement.id.slice(1);
+	RefuseRequest(requestId);
+}); 
+
+function deleteRequest(contactId){
+	var elem = document.getElementById("r"+contactId);
+	if (elem!=null) elem.parentNode.removeChild(elem);
+}
+
+function blockSuccess(data) {
+	var elem = document.getElementById(data.user.id);
+	if (elem != null) elem.parentNode.removeChild(elem);
+}
+
+function deleteSuccess(data) {
+	var elem = document.getElementById(data.user.id);
+	if (elem != null) elem.parentNode.removeChild(elem);
+}
+
+</script>

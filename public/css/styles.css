@@ -1,0 +1,266 @@
+html,body{
+  height: 100%
+}
+
+.navbar-brand {
+  padding-top: 0px;
+}
+.emoji-small{
+  height: 1.5em;
+  width: 1.5em;
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: contain;
+  display: inline-block;
+  vertical-align: middle;
+}
+
+.nopadding {
+   padding: 0 !important;
+   margin: 0 !important;
+}
+
+.navbar{
+  padding-top: 15px;
+}
+.navbar-inverse .navbar-nav .nav-link {
+  color:#fff;
+}
+.container{
+  padding:0 0 0 0;  
+  margin:0 0 0 0;
+  width:100%;
+  height:100%;
+}
+
+header{
+  padding-top:15px;
+  color:#FFF;
+  text-align:center;
+}
+.page{
+  background-image: url(/img/mister.png);
+  background-repeat: no-repeat;
+  background-position:left bottom;
+  background-size: 400px;
+}
+
+.profile{
+  height: 100%;
+  background-color:#1A5276;
+}
+
+footer{
+  background-color:#d9dfe4;
+  line-height:12px;
+  bottom:0;
+  width:100%;
+}
+
+#conteneur
+{
+    display: flex;
+    flex-wrap: nowrap;
+    justify-content: space-around;
+}
+
+
+#pagecard
+{
+  height : 535px;
+  margin: 0 auto; /* Added */
+  float: none; /* Added */
+  margin-right: 50px;
+  padding-top: 20px;
+  visibility:visible;
+  display:block;
+}
+
+#rstpass
+{
+  visibility:hidden;
+  display:none;
+}
+
+.logo{
+  background-image: url(/img/logo-text-white.png);
+  background-size: 200px;
+  background-repeat: no-repeat;
+  width: 200px;
+}
+
+.img-circle {
+  margin:auto;
+  width: 150px;
+  height: 150px;
+  border-radius: 5px;
+}
+
+.img-circle-small {
+  margin-right:10px;
+  margin-left: 10px;
+  width: 32px;
+  height: 32px;
+  border-radius: 5px;
+  float:left;
+  display:inline;vertical-align:middle;
+}
+
+.dropleft{
+  left: auto;
+  right: 0px;
+}
+
+.notifications {
+  background-color: #fa3e3e;
+  border-radius: 2px;
+  color: white;
+  padding: 1px 3px;
+  font-size: 10px;
+  position: absolute; /* Position the badge within the relatively positioned button */
+  top: 0;
+  right: 20px;
+}
+
+.modify{
+  margin-bottom: .5rem;
+  font-family: inherit;
+  font-weight: 500;
+  line-height: 1.1;
+  color: inherit;
+  cursor:pointer;
+  background:none;
+  border:none;
+  width:50%;
+  font-size: 1.25rem;
+}
+
+.home-box {
+  width: 400px;
+  height: 400px;
+
+  position: absolute;
+  top:0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  
+  margin: auto;
+}
+
+.btn-file {
+    position: relative;
+    overflow: hidden;
+}
+.btn-file input[type=file] {
+    position: absolute;
+    top: 0;
+    right: 0;
+    min-width: 100%;
+    min-height: 100%;
+    font-size: 100px;
+    text-align: right;
+    filter: alpha(opacity=0);
+    opacity: 0;
+    outline: none;
+    background: white;
+    cursor: inherit;
+    display: block;
+}
+
+
+
+.btn-space{
+  margin-right: 10px;
+}
+
+
+.inline-auto{
+  display: inline-block;
+  width: auto;
+}
+
+::-webkit-scrollbar {
+  width: 12px;
+  height: 12px;
+}
+::-webkit-scrollbar-button {
+  width: 0px;
+  height: 0px;
+}
+::-webkit-scrollbar-thumb {
+  background: #b9c4cd;
+  border: 0px none #ffffff;
+  border-radius: 5px;
+}
+::-webkit-scrollbar-track {
+  background: #ebedf0;
+  border: 0px none #ffffff;
+  border-radius: 5px;
+}
+::-webkit-scrollbar-corner {
+  background: transparent;
+}
+
+.box{
+  width:100px;
+  height:100px;
+  display:inline-block;
+  text-align:center;
+  line-height:95px;  
+  color:white;
+}
+.box:first-child {
+    border-radius: 5px 0px 0px 5px;
+}
+.box:last-child {
+    border-radius: 0px 5px 5px 0px;
+}
+
+.pink{
+  background:#F15A5A;
+}.yellow{
+  background:#F0C419;
+}.green{
+  background:#4EBA6F;
+}.blue{
+  background:#2D95BF;
+}.purple{
+  background:#955BA5;
+}
+
+
+.modal-body .list-group-item .title {
+    width: 150px;
+    color: black;
+}
+
+.card {
+  border:none;
+}
+.card-header{
+  padding-bottom: 0px;
+  background:none;
+  border:none;
+}
+
+
+@media screen and (max-width: 740px) {
+  html,body{
+    height: auto;
+    overflow: auto;
+  }
+  .profile{
+    text-align: center;
+    min-height: 70px;
+  }
+  .app, .ContactPanel, .MessagePanel, footer{
+    height:auto;
+  }
+}
+
+
+@media screen and (max-width: 540px) {
+
+
+}

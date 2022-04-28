@@ -1,0 +1,86 @@
+#statusId{
+  display: inline;
+}
+.MessagePanel{
+  height:100%;
+}
+
+.message-title{
+  display: inline;
+}
+
+.message-header{
+  margin-left: 10px;
+  height: 50px;
+  padding-top: 10px;
+}
+.message-header .options { 
+  float:right;
+  color:#1A5276;
+  word-spacing: 10px;
+}
+.message-header .name { 
+  float:left;
+}
+.message-header .before{
+  float: left;
+  padding-right: 10px;
+}
+.message-footer{
+  padding-left: 20px;
+  padding-right: 20px;
+}
+
+.message-body{
+  padding-left: 20px;
+}
+
+.chatlogs{
+  padding: 10px 100px 0px 30px;
+  margin-bottom:10px;
+  height:66%;
+  background:#fff;
+  overflow-x:hidden;
+  overflow-y:scroll;
+}
+.chat{
+  margin: 10px 0px 10px 0px;
+}
+.chat .message{
+  padding-left: 54px;
+  clear: left;
+}
+.chat .title .date { 
+  float:right;
+  color:#b9b9b9;
+}
+.chat .title .name { 
+  font-weight: bold; 
+  float:left;
+  color:#1A5276;
+}
+
+[contenteditable=true]:empty:before{
+  content: attr(placeholder);
+  display: block; /* For Firefox */
+}
+
+
+.chatform .messagebox{
+  height: 80px;
+  margin-bottom: 10px;
+  overflow-y: scroll;
+}
+textarea {
+  resize: none;
+}
+
+.arrow-down-grey{
+  margin: 0px;
+  background-image:url(/img/chevron-down-grey.png); 
+  background-size: cover; 
+  background-position: 50%;
+  height: 30px;
+  width: 30px; 
+}
+

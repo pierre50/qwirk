@@ -1,0 +1,70 @@
+<div class="modal fade" id="ModalCalling"  data-keyboard="false" data-backdrop="static" tabindex="-1" role="dialog" aria-labelledby="ModalCallingTitle" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="ModalCallingTitle">Someone is calling</h5>
+            </div>
+            <div class="modal-body">
+                <img id="ModalCallingImg" src="/img/profile.png" class="img-circle">
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-danger" id="RefuseCall" data-dismiss="modal">Decline</button>
+                <button type="button" class="btn btn-success" id="AnswerCall">Answer</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+
+var audioCall = new Audio('/audio/phone.mp3');
+var contact;
+var channelCall;
+var video;
+var modalIsOpen = false
+
+function isCalling(from,id,vid,cryptedUser){
+    contact=from;
+    video=vid;
+    channelCall=id;
+    audioCall.play();
+    document.getElementById("ModalCallingTitle").innerHTML= from.username + " is calling";
+    if (from.picture!=""){
+        document.getElementById("ModalCallingImg").src="/"+ cryptedUser + "/img/" + from.picture;
+    }
+    if (!modalIsOpen){   
+        $('#ModalCalling').modal('show'); 
+        modalIsOpen=true;
+    }
+}
+
+function canceledCall(from){
+    modalIsOpen = false;
+    $('#ModalCalling').modal('hide'); 
+}
+
+$('#RefuseCall').click(function() {
+    if (contact!=null){
+        RefuseCallRequest(contact,user);
+        modalIsOpen = false;
+        $('#ModalCalling').modal('hide'); 
+    }
+});
+
+
+$('#AnswerCall').click(function() {
+    if (contact!=null){
+        AcceptCallRequest(contact,user,channelCall,video);
+
+        var link=window.location.protocol+"//"+window.location.host + "/audiocall/"+channelCall;
+        if (video){
+            var link=window.location.protocol+"//"+ window.location.host + "/videocall/"+channelCall;
+        }
+
+        otherWinRef = window.open(link,"Call","titlebar=no,toolbar=no,directories=no,location=no,menubar=no,resizable=no, status=no, scrollbars=no, width=635, height=485");
+       $('#ModalCalling').modal('hide'); 
+       modalIsOpen = false;
+    }
+});
+
+</script>

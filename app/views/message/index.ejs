@@ -1,0 +1,326 @@
+<script>
+var contacts,user,channel,group;
+function initMessage(){
+	contacts = <%-JSON.stringify( contact )%>
+	user = <%-JSON.stringify( user )%>
+	channel= contacts[0].username;
+	<%if (group) {%>
+		group = <%-JSON.stringify( group )%>
+		channel = <%= group.id %>
+	<%}%>
+}
+initMessage();
+</script>
+
+<div class="MessagePanel">
+	<div class="message-header">
+		<% include header %>
+	</div>
+	<div class="message-body">
+		<div id="chat" class="chatlogs" >
+
+			<%if (messages) {%>
+				<%if (messages.length > 0) {%>
+				  	<% messages.forEach(function(message){ %>
+				  		<%if (message.type!='info'){%>
+				  		<%if (message.id==user.id) {%>
+		  	       		 	<div class="chat">
+						   		<%if (user.picture!="") { %>
+					    			<img src="/<%= encrypt(user.username) %>/img/<%= user.picture %>" class="img-circle-small">
+					    		<%} else { %>
+					    			<img src="/img/profile.png" class="img-circle-small">
+					    		<% } %>
+
+			  	        		<div class="title">
+									<span class="name"><%= user.username %></span>
+			  	        			<span class="date"><%= message.date %></span>
+			  	        		</div>
+
+			  	        		<div id="msg" class="message"><%- message.content %></div>
+		  	        		</div>
+				  		<%}else{%>
+							<% contact.forEach(function(c){ %>
+								<%if (message.id==c.id) { %>
+			  	       		 	<div class="chat">
+
+							   		<%if (c.picture!="") { %>
+						    			<img src="/<%= encrypt(c.username) %>/img/<%= c.picture %>" class="img-circle-small">
+						    		<%} else { %>
+						    			<img src="/img/profile.png" class="img-circle-small">
+						    		<% } %>
+
+				  	        		<div class="title">
+					  	        		
+					  	        		<%if (c.to_fk == c.id) {%>
+											<%if ((c.pseudo_from == "")||(c.username == c.pseudo_from)) {%>
+												<span class="name"><%= c.username %></span>
+											<% }else{ %>
+												<span class="name"><%= c.pseudo_from %></span>
+											<% } %>
+										<% }else if (c.from_fk == c.id){ %>
+											<%if ((c.pseudo_to == "")||(c.username == c.pseudo_to)) {%>
+												<span class="name"><%= c.username %></span>
+											<% }else{ %>
+												<span class="name"><%= c.pseudo_to %></span>
+											<% } %>
+										<% }else{ %>
+											<span class="name"><%= c.username %></span>
+										<% } %>
+									
+				  	        			<span class="date"><%= message.date %></span>
+				  	        		</div>
+
+				  	        		<div id="msg" class="message"><%- message.content %></div>
+			  	        		</div>
+			  	        		<% } %>
+			  	        	<% }); %>
+		  	        	<% } %>
+		  	        	<% }else{ %>
+							<div class="alert alert-info" role="alert"><strong>Info!</strong> <%- message.content %></div>
+
+		  	        	<% } %>
+				  	<% }); %>
+			  	<% } %>
+		  	<% } %>
+		</div>
+	</div>
+	<div class="message-footer">
+		<form id="messageForm" class="chatform">
+				<div class="form-control messagebox" id="message" contentEditable="true" placeholder="Write your message.."></div>
+		</form>
+		<form id="upload" enctype="multipart/form-data" style="display: inline;">
+			<label class="active thisweek">
+					<input id="myFile" style="display:none;" type="file" name="myFile">
+					<img src="/img/attachment.png">
+			</label>
+		</form>
+		<img id="bold" src="/img/bold.png">
+		<img id="italic" src="/img/italic.png">
+		<img id="underline" src="/img/souligner.png">
+	</div>
+</div>
+
+
+<script>
+
+
+
+/*
+/	Transform text italic/bold/underline
+/
+*/
+$(document).ready(function() {
+  	$('#bold').click(function() {
+  		$message.focus();
+    	document.execCommand('bold');
+  	});
+	$('#italic').click(function() {
+  		$message.focus();    	
+  		document.execCommand('italic');
+  	});
+  	$('#underline').click(function() {
+   		$message.focus();   	
+   		document.execCommand('underline');
+  	});
+});
+
+
+
+/*
+/	Message system
+/
+*/
+var $messageForm=$('#messageForm');
+var $message=$('#message');
+var $chat=$('#chat');
+
+$chat[0].scrollTop = $chat[0].scrollHeight; 
+$chat[0].innerHTML=toEmoji2($chat[0].innerHTML);
+
+
+// User is typing in message textbox
+$message.keydown(function(e) {
+	value=$message[0].textContent;
+	if (value){
+   	   	if (event.keyCode == 13 && event.shiftKey) {
+	       	//var content = this.value;
+	       	//var caret = getCaret(this);
+	       	//this.value = content.substring(0,caret)+"\n"+content.substring(carent,content.length-1);
+	  	}else if(event.keyCode == 13){
+	  		e.preventDefault();
+	      	$(this).submit();
+	  	}else{
+	  	 	toEmoji(this);
+	  	}
+	}else if(event.keyCode == 13){
+		e.preventDefault();
+	}
+});
+
+// Submit a message
+$messageForm.submit(function(e){
+    e.preventDefault();
+    if ($message[0].textContent!=''){
+        var message_secure=unEmoji($message[0].innerHTML);
+        message_secure=message_secure.replaceAll('&nbsp;'," ");
+        message_secure=message_secure.replaceAll("&","&amp;");
+        message_secure=message_secure.replaceAll("<","&lt;");
+        message_secure=message_secure.replaceAll(">","&gt;");
+
+    	if (isURL(message_secure) == true) {
+    		SendMsg(message_secure,user,contacts,channel,'url');
+    	} else{
+			SendMsg(message_secure,user,contacts,channel,'texte');
+    	}
+    	$($message).empty();
+    }
+});
+
+function NewMsg(data){
+	// Get the current contact id
+	var isWatching=false;
+	var notifMsg;
+
+	if (group) {
+		if (data.channel==group.id){
+	   		isWatching=true;
+		}
+	}else{
+		console.log(contacts)
+		if (((contacts[0].id==data.from.id)&&(user.username==data.channel))||(contacts[0].username==data.channel)){
+	   		isWatching=true;
+		}
+	}
+
+	if(data.type == 'texte' || data.type =='info' || data.type == 'url')
+		notifMsg = raw(data.msg);
+	else if(data.type == 'image' || data.type == 'file') {
+		notifMsg = 'Send you a file !';
+	}
+
+
+    // If current user talk is talking with the contact of the new message
+   	if (isWatching){
+   		content=raw(data.msg);
+   		// Change special character of different type
+	    if(data.type == 'texte' || data.type =='info') { var msg = content; }
+	    else if (data.type == 'url') { var msg = getURL(content); }
+	    else if(data.type == 'image') {
+	   		content = content.substring(6);
+		    var msg = '<a href="'+content+'" download><img alt="img" src="'+content+'" style="border-radius: 15px 30px" width="100" height="100"></a>';
+	    } else if(data.type == 'file') {
+	    	content = content.substring(6);
+	    	var pos = content.search("/uploads/") + 9;
+	    	var msg = '<a href="'+ content +'" download><img alt="img" src="/img/file.png" width=15" height="15">'+ content.substring(pos) +'</a>';
+	    }
+
+	    // Get the user picture
+	    var imgURL="/img/profile.png";
+	    if (data.from.picture!="")
+	    {
+	        if (ImageExist("/"+ data.from.cryptedPseudo +"/img/"+data.from.picture)){
+	            imgURL="/"+ data.from.cryptedPseudo +"/img/"+data.from.picture
+	        }
+	    }
+
+	    var img='<div class="img-circle-small" style="background-image:url('+imgURL+'); background-size: cover; background-position: 50%;"></div>';
+
+	    // We display the message with a different style if the message is from the current user
+	    if (data.type!='info'){
+			if (user.id==data.from.id){
+			    $chat.append('<div class="chat">'+img+'<div class="title"><span class="name">'+ data.from.username +'</span><span class="date">'+data.date+'</span></div><div class="message">'+msg+'</div></div>');
+			}else{
+				$chat.append('<div class="chat">'+img+'<div class="title"><span class="name">'+ data.from.usernamePseudo +'</span><span class="date">'+data.date+'</span></div><div class="message">'+msg+'</div></div>');
+				//window.onblur = function() {
+					audioMsg.play();
+					SendNotification(data.from, notifMsg, data.groupFrom);
+				//}
+			}
+		}else{
+			$chat.append('<div class="alert alert-info" role="alert"><strong>Info!</strong> '+msg+'</div>')
+		}
+   		// Change to emoji
+		$chat[0].innerHTML=toEmoji2($chat[0].innerHTML);
+
+    	// Scroll the message to the bottom
+    	$chat[0].scrollTop = $chat[0].scrollHeight; 
+    }else if (data.type!='info'){
+		audioMsg.play();
+		if(data.type == 'texte' || data.type =='info' || data.type == 'url')
+		   	notifMsg = raw(data.msg);
+		else if(data.type == 'image' || data.type == 'file') {
+		   	notifMsg = 'Send you a file !';
+		}
+        if (data.channel == data.to.username){
+            AddUnreadMessage(data.to,data.from.userId);
+        }else{
+            if (data.to.public==1) AddUnreadMessageGroup(user,"c"+data.channel);
+            else AddUnreadMessageGroup(user,"g"+data.channel);
+        }           
+        SendNotification(data.from, notifMsg,data.groupFrom);
+
+    }
+
+}
+
+
+var $myFile=$('#myFile');
+var upload = document.getElementById("upload");
+
+$myFile.change(function(e){
+    e.preventDefault();
+    // We take the file
+    var file = $(this)[0].files;
+    // Verify a file is selected
+    if (file.length > 0){
+        if (file[0].size > 0) {
+            var reader = new FileReader();
+            reader.readAsDataURL(file[0]);
+            reader.onload = function () {
+            	SendUploadMessage(file[0],reader)
+	        };
+            reader.onerror = function (error) {
+                console.log('Error: ', error);
+            };
+        }else{
+            alert("wrong file");
+        }
+    }
+ });
+
+
+$('#messageForm').on({
+    'dragover dragenter': function(e) {
+        e.preventDefault();
+        e.stopPropagation();
+    },
+    'drop': function(e) {
+        var dataTransfer =  e.originalEvent.dataTransfer;
+        if(dataTransfer && dataTransfer.files.length) {
+            e.preventDefault();
+            e.stopPropagation();
+            $.each(dataTransfer.files, function(i, file) { 
+                var reader = new FileReader();
+                reader.onload = $.proxy(function(file, $fileList, event) {
+            		SendUploadMessage(file,reader)
+              	}, this, file, $("#message"));
+              reader.readAsDataURL(file);
+            });
+        }
+    }
+});
+
+function SendUploadMessage(file,reader){
+
+    if(file.size <= 10485760) {
+    	if (isImg(file.name) == true){
+    		UploadFile(file.name,reader.result,user,contacts,channel, 'image');
+    	}
+    	else{
+    		UploadFile(file.name,reader.result,user,contacts,channel, 'file');
+    	}
+    } else 
+	   	alert("The max size of file is 10Mo");
+};
+
+</script>

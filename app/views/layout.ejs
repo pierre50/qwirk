@@ -1,0 +1,64 @@
+
+<html>
+<head>
+	<title>Qwirk</title>
+
+	<!--<meta name="viewport" content="width=device-width, initial-scale=1.0">-->
+	
+	<link rel="stylesheet" href="/css/bootstrap.min.css">
+
+	<link rel="stylesheet" href="/css/styles.css">
+	<link rel="stylesheet" href="/css/header.css">
+	<link rel="stylesheet" href="/css/contact.css">
+	<link rel="stylesheet" href="/css/message.css">
+
+	<!-- Insert this line above script imports  -->
+	<script>if (typeof module === 'object') {window.module = module; module = undefined;}</script>
+
+	<script src="/js/jquery-3.1.1.slim.min.js"></script>
+	<script src="/js/tether.min.js"></script>
+	<script src="/js/bootstrap.min.js"></script>
+
+	<script src="/socket.io/socket.io.js"></script>
+	<script src="/js/others.js"></script>
+
+	<script src="/js/dropzone.js"></script>
+
+	<!-- Insert this line after script imports -->
+	<script>if (window.module) module = window.module;</script>
+
+</head>
+<body>
+
+	<!-- 
+	# Main Page
+	#
+	-->
+	<div class="container">
+		<% if((content=="login/index")||(content=="login/restore")){ %>
+			<%- include login/header %>
+			<%- include(content) %>
+	 	<% } else{ %>  
+	 		<script> var user = <%-JSON.stringify( user )%> </script>
+	   		<div id="mainArea">
+				<div class="app">
+					<div class="row nopadding">
+						<div class="col-md-3 nopadding <%=user.theme%>" id="contactNav" style="z-index= -1;">
+							<% include shared/header %>
+							<% include shared/contact %>
+						</div>
+						<div class="col-md-9">
+							<%- include(content) %>
+						</div>
+					</div>
+				</div>
+			</div>
+			<% include shared/calling %>
+
+		<% } %>
+
+	</div>	
+	<script src="/client.js"></script>
+
+</body>
+</html>

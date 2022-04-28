@@ -1,0 +1,63 @@
+<message>
+<id>1</id>
+<name>pierre</name>
+<txt>rzer</txt>
+<type>texte</type>
+<date>06/02/2017 10:46:56</date>
+</message>
+<message>
+<id>2</id>
+<name>Paul</name>
+<txt>rzerzer</txt>
+<type>texte</type>
+<date>06/02/2017 10:47:01</date>
+</message>
+<message>
+<id>1</id>
+<name>pierre</name>
+<txt>hey</txt>
+<type>texte</type>
+<date>06/02/2017 15:13:00</date>
+</message>
+<message>
+<id>1</id>
+<name>pierre</name>
+<txt>hey</txt>
+<type>texte</type>
+<date>06/02/2017 15:13:05</date>
+</message>
+<message>
+<id>1</id>
+<name>pierre</name>
+<txt>pierre start a videocall</txt>
+<type>info</type>
+<date>06/02/2017 15:14:44</date>
+</message>
+<message>
+<id>1</id>
+<name>pierre</name>
+<txt>lol</txt>
+<type>texte</type>
+<date>06/02/2017 15:15:58</date>
+</message>
+<message>
+<id>1</id>
+<name>pierre</name>
+<txt>lol</txt>
+<type>texte</type>
+<date>06/02/2017 15:16:03</date>
+</message>
+<message>
+<id>2</id>
+<name>Paul</name>
+<txt>johndoe, join the group</txt>
+<type>info</type>
+<date>06/06/2017 18:32:51</date>
+</message>
+<message>
+<id>2</id>
+<name>Paul</name>
+<txt>johndoe, join the group</txt>
+<type>info</type>
+<date>06/06/2017 18:33:05</date>
+</message>

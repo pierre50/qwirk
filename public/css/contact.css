@@ -1,0 +1,145 @@
+.ContactPanel{
+  padding: 0px 10px 10px 15px
+}
+.ContactPanel h5 {
+    color: white;    
+    padding-top: 10px;
+}
+
+.requestlogs{
+  width:400px;
+  height:300px;
+  background:#fff;
+  overflow-x:hidden;
+  overflow-y:scroll;
+}
+
+.contactHeader{
+
+}
+.contactHeader .search{
+  width:75%;
+  padding: 10px 12px 10px 35px;
+  background: #f2f2f2 url("../img/search.png") 10px 14px no-repeat;
+  text-decoration: none;
+  border: none;
+  -webkit-border-radius: 5px;
+  -moz-border-radius: 5px;
+  border-radius: 5px;
+}
+.contactHeader .menu {
+  margin:5px 5px 5px 5px;
+  color: #bcbcbc;
+  background: #f2f2f2;
+  padding: 14px 15px 12px 15px;
+  text-decoration: none;
+  border: none;
+  -webkit-border-radius: 5px;
+  -moz-border-radius: 5px;
+  border-radius: 5px;
+}
+.contactHeader .menu:hover {
+  background: #ededed;
+  text-decoration: none;
+}
+
+.contactlogs{
+  padding: 0px;
+  max-height: 150px;
+  /* background: #fff; */
+  /* overflow-x: hidden; */
+  overflow-y: scroll;
+}
+
+
+
+.list-group-item{
+    padding-left: 5px;
+    border: none;
+    border-radius: 5px;    
+    -moz-border-radius: 5px 5px 5px 5px;
+    /* -webkit-border-radius: 5px 5px 5px 5px; */
+    /* margin: 5px 5px 5px 5px; */
+    height: 40px;
+    background: none;
+}
+
+.list-group-item p {
+  margin-top:auto;
+}
+
+.list-group-item p span
+{
+    display: block;
+}
+.list-group-item .title{
+  width: 150px;
+  color: white;
+}
+.list-group-item .title-grey{
+  width: 150px;
+  color: lightgrey;
+}
+
+.list-group-item .title-black{
+  padding-top: 5px;
+  width: 150px;
+  color: black;
+}
+li a:hover {
+    text-decoration: none;
+}
+.selected {
+  background-color: rgba(0, 0, 0, 0.1);
+  color:white;
+}
+
+.title-group {
+  padding-left: 25px;
+}
+
+.message-notif {
+  background-color: #fa3e3e;
+  border-radius: 2px;
+  color: white;
+ 
+  padding: 1px 3px;
+  font-size: 10px;
+  
+  position: absolute; /* Position the badge within the relatively positioned button */
+  top: 6px;
+  left: 20px;
+    -webkit-animation: jump 800ms linear infinite both;
+    animation: jump 800ms linear infinite both;
+}
+
+@-webkit-keyframes jump {
+  0%{
+  -webkit-transform: translateY(0);
+  transform: translateY(0);
+  }
+  20%{
+  -webkit-transform: translateY(0);
+  transform: translateY(0);
+  }
+  40%{
+  -webkit-transform: translateY(-6px);
+  transform: translateY(-6px);
+  }
+  50%{
+  -webkit-transform: translateY(0);
+  transform: translateY(0);
+  }
+  60%{
+  -webkit-transform: translateY(-3px);
+  transform: translateY(-3px);
+  }
+  80%{
+  -webkit-transform: translateY(0);
+  transform: translateY(0);
+  }
+  100%{
+  -webkit-transform: translateY(0);
+  transform: translateY(0);
+  }
+}

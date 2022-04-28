@@ -1,0 +1,19 @@
+html, body { 
+    background-color: #333; 
+    margin:0px;
+}
+video {
+    width:  320px;
+    height:  240px;
+    /*border:  1px solid black;*/
+}
+.big-video{
+	width:630px;
+	height:480px;
+}
+.small-video{
+	width:210px;
+	height:160px;
+	position:absolute;
+	top:0px;
+}
